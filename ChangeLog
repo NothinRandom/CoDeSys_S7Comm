@@ -1,0 +1,2 @@
+v1.0.0.0:
+* first release has capabilities to connect/disconnect, read cpu module, read/write to data blocks.  Will work on other features in the near future
