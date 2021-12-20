@@ -9,7 +9,7 @@ Previously, a [CoDeSys EtherNet/IP library (CoDeSys_EIP)](https://github.com/Not
 
 For the control engineers out there, you might already know that writing PLC code is not as flexible as writing higher level languages such as Python/Java/etc, where you can create variables with virtually any data type on the fly; thus, this library was heavily modified to accomodate control requirements.  It is written to operate asynchronously (non-blocking) to avoid watchdog alerts, which means you make the call and be notified when data has been read/written succesfully.  If you need to read multiple variables in one scan, then you can create a lower priority task and place the calls into a WHILE loop or use each scan cycle to generate a for loop (see `Examples/Siemens`).  At least 95% of the library leverages pointers for efficiency, so it might not be straight forward to digest at first.  The documentation / comments is not too bad, but feel free to raise issues if needed.
 
-### Getting started
+### **Getting started**
 Create an function block instance in your CoDeSys program, and specify the PLC's IP and port.  Then create some variables:
 ```
 VAR
@@ -39,10 +39,26 @@ END_VAR
 
 In your code, toggle `bEnable` of _PLC to `TRUE`.  There is optional `bAutoReconnect` to re-establish session if terminated from idling.
 
-#### Data alignment:
+### **Data alignment**:
 Siemens is 0 bytes aligned, so make sure you specify CoDeSys STRUCTs with `{attribute 'pack_mode' := '0'}`.  Read the [CoDeSys pack mode](https://help.codesys.com/webapp/_cds_pragma_attribute_pack_mode;product=codesys;version=3.5.16.0).
 
-#### Reading Data Block
+### **Notes For Read/Write DB (Read Carefully)**:
+* [Endianness](https://en.wikipedia.org/wiki/Endianness):
+    * Siemens data uses **Big Endian format**, for your CoDeSys controller (e.g. RaspberryPi, x86, etc) is most likely **Little Endian**.  This means if your CoDeSys controller is reading a Siemens PLC's data block, then the values will not be correct.  For example, the Siemens PLC has a variable called `test` with data type of `UINT` with value 1 (`16#0001`).  If you read this value from your CoDeSys controller, the value will show up as 256 (`16#0100`) instead because the bytes order is swapped.  For `bReadDB` and `bWriteDB`, if you want to automatically have this data converted, then you will need to specify the correct data struct via `eDataSize` (e.g. `eDataSize:=CoDeSys_S7Comm.eDataType._UINT`).  This will automatically swap the bytes for you from Little Endian (CoDeSys) to Big Endian (Siemens) and vice versa.  If you have a STRUCT that contains a mix of data types, then select _STRUCT (e.g. `eDataSize:=CoDeSys_S7Comm.eDataType._STRUCT`) and no conversion will be made.
+    * Data type `STRING` doesn't require conversion (e.g. `test` shows up as `test`).
+    * Big Endian:
+        * S7-300
+        * S7-400
+        * S7-1200
+        * S7-1500 (non-optimized data blocks)
+    * Little Endian:
+        * S7-1500 (optimized data blocks)
+* Data block optimization:
+    * Right-click on your data block and go to Properties... and go under `Attributes`.  This is where you can check and uncheck `Optimized block access`.  For now, this library only handles Big Endian, but we'll be able to handle both, so check back on later revision.
+* Permission:
+    * Go into your Siemens' controller properties (right click -> Properties...) and go under the `Protect & Security` section.  Make sure to have `Full access (no protection) checked **only if you want to read and write**.  From a security standpoint, it is never a good idea to provide access without first assessing your environment to make sure proper security measures are in place (e.g. firewall, segmented VLAN, etc).
+
+### **Reading Data Block**
 **NOTE**:
 * Possible arguments for `bReadDB`:
     * `uiIndex` (UINT) [**required**]: Data block index number.
@@ -106,7 +122,7 @@ _PLC.bReadDB(uiIndex:=2,
             psId:=ADR('Read#14: '));
 ```
 
-### Writing Data Block
+### **Writing Data Block**
 **NOTE**:
 * Siemens PLCs use Big Endian, so you will need to most likely swap bytes when reading a custom STRUCT.  Known data types have been swapped for you already.
 * Possible arguments for `bWriteDB`:
@@ -170,10 +186,10 @@ _PLC.bWriteDB(uiIndex:=2,
             psId:=ADR('Write#14: '));
 ```
 
-### But does it work?
-Yes... 60% of the time, it works every time.  Testing was done using a Raspberry Pi 3, with CoDeSys 3.5.16.0 runtime installed, to communicate with a Siemens `CPU 1517F-3 PN/DP` PLC.  You will need to install SysTime and OSCAT Basic (this is for time formatting).
+### **But does it work?**
+Testing was done using a Raspberry Pi 3, with CoDeSys 3.5.16.0 runtime installed, to communicate with a Siemens `CPU 1517F-3 PN/DP` PLC.  You will need to install SysTime and OSCAT Basic (this is for time formatting).
 
-### Current features
+### **Current features**
 #### Get CPU Info
 `bGetCpuInfo()` (BOOL) is automatically called after TCP connection is established to return device info. You could scan your network for other Siemens PLCs.  
 * **Examples:**
@@ -222,7 +238,7 @@ Currently under development and will be released in the next revision.
     * **NOTE:** Look at built-in `Timestamp` function block
 -->
 
-### Useful parameters (SET/GET)
+### **Useful parameters (SET/GET)**
 **NOTE:** There are a lot more, so dive into library to see what works best for you
 * `bAutoReconnect` (BOOL) re-establishes session if disconnected.
     * Default: `FALSE`
@@ -249,10 +265,10 @@ Currently under development and will be released in the next revision.
 * `udiTcpClientRetry` (UDINT) specifies the auto reconnect interval for `bAutoReconnect`.
     * Default: `5000` milliseconds
 
-### Useful variable lists:
+### **Useful variable lists**:
 * `gvcParameters` holds the default values from above, so adjust values to fit your needs.
 
-### Useful methods:
+### **Useful methods**:
 * `bDisconnect()` (BOOL) sends a disconnect session request. 
     * **NOTE:** If `bAutoReconnect` is set to TRUE, session will be re-established within the specified `udiTcpClientRetry` period.
 * `bResetFault()` (BOOL) call this to ACK read/write fault flags.
