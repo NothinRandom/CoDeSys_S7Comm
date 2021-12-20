@@ -13,23 +13,26 @@ For the control engineers out there, you might already know that writing PLC cod
 Create an function block instance in your CoDeSys program, and specify the PLC's IP and port.  Then create some variables:
 ```
 VAR
-    _PLC        : CoDeSys_S7Comm.Device(sIpAddress:='192.168.1.219', uiPort:=44818);
+    _PLC        : CoDeSys_S7Comm.Device(sIpAddress:='192.168.1.219',
+                                        uiPort:=102,
+                                        bRack:=0,
+                                        bSlot:=0);
 
-	_bReadDb    : BOOL;     // create var for write (e.g. _bWriteDb)
-	_bReadDb1   : BYTE;     // create var for write 
-	_siReadDb   : SINT;     // create var for write 
-	_usiReadDb  : USINT;    // create var for write 
-	_iReadDb    : INT;      // create var for write 
-	_uiReadDb   : UINT;     // create var for write 
-	_diReadDb   : DINT;     // create var for write 
-	_udiReadDb  : UDINT;    // create var for write 
-	_liReadDb   : LINT;     // create var for write 
-	_uliReadDb  : ULINT;    // create var for write 
-	_wReadDb    : WORD;     // create var for write 
-	_dwReadDb   : DWORD;    // create var for write 
-	_rReadDb    : REAL;     // create var for write 
-	_lrReadDb   : LREAL;    // create var for write 
-	_stReadDb   : stString; // create var for write 
+    _bReadDb    : BOOL;     // create var for write (e.g. _bWriteDb)
+    _bReadDb1   : BYTE;     // create var for write 
+    _siReadDb   : SINT;     // create var for write 
+    _usiReadDb  : USINT;    // create var for write 
+    _iReadDb    : INT;      // create var for write 
+    _uiReadDb   : UINT;     // create var for write 
+    _diReadDb   : DINT;     // create var for write 
+    _udiReadDb  : UDINT;    // create var for write 
+    _liReadDb   : LINT;     // create var for write 
+    _uliReadDb  : ULINT;    // create var for write 
+    _wReadDb    : WORD;     // create var for write 
+    _dwReadDb   : DWORD;    // create var for write 
+    _rReadDb    : REAL;     // create var for write 
+    _lrReadDb   : LREAL;    // create var for write 
+    _stReadDb   : stString; // create var for write 
 
 END_VAR
 ```
@@ -141,7 +144,7 @@ Below writes a CoDeSys variable with data type **UDINT** called `_udiWriteDb` to
             eDataSize:=CoDeSys_S7Comm.eDataType._UDINT,
             pbBuffer:=ADR(_udiWriteDb),
             uiBufferSize:=SIZEOF(_udiWriteDb),
-            psId:=ADR('Read#7: '));
+            psId:=ADR('Write#7: '));
 ```
 *
 *
@@ -154,17 +157,17 @@ _PLC.bWriteDB(uiIndex:=2,
             eDataSize:=CoDeSys_S7Comm.eDataType._LREAL,
             pbBuffer:=ADR(_lrWriteDb),
             uiBufferSize:=SIZEOF(_lrWriteDb),
-            psId:=ADR('Read#13: '));
+            psId:=ADR('Write#13: '));
 ```
 Below writes a CoDeSys variable with data type **STRUCT** called `_stWriteDb`to a PLC's variable with data type **STRING** at address offset 52 of data block #2.
 **NOTE:** Writing to a PLC string must follow the format of a STRUCT made up of maxLen (BYTE), actualLen (BYTE), and a STRING.  These will be set during write!  See `Examples/Siemens` folder for more details
 ```
-_PLC.bReadDB(uiIndex:=2,
+_PLC.bWriteDB(uiIndex:=2,
             udiOffset:=50,
             eDataSize:=CoDeSys_S7Comm.eDataType._STRING,
             pbBuffer:=ADR(_stReadDb),
             uiBufferSize:=SIZEOF(_stReadDb),
-            psId:=ADR('Read#14: '));
+            psId:=ADR('Write#14: '));
 ```
 
 ### But does it work?
