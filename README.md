@@ -165,8 +165,8 @@ Below writes a CoDeSys variable with data type **STRUCT** called `_stWriteDb`to 
 _PLC.bWriteDB(uiIndex:=2,
             udiOffset:=50,
             eDataSize:=CoDeSys_S7Comm.eDataType._STRING,
-            pbBuffer:=ADR(_stReadDb),
-            uiBufferSize:=SIZEOF(_stReadDb),
+            pbBuffer:=ADR(_stWriteDb),
+            uiBufferSize:=SIZEOF(_stWriteDb),
             psId:=ADR('Write#14: '));
 ```
 
@@ -174,7 +174,7 @@ _PLC.bWriteDB(uiIndex:=2,
 Yes... 60% of the time, it works every time.  Testing was done using a Raspberry Pi 3, with CoDeSys 3.5.16.0 runtime installed, to communicate with a Siemens `CPU 1517F-3 PN/DP` PLC.  You will need to install SysTime and OSCAT Basic (this is for time formatting).
 
 ### Current features
-#### List Identity
+#### Get CPU Info
 `bGetCpuInfo()` (BOOL) is automatically called after TCP connection is established to return device info. You could scan your network for other Siemens PLCs.  
 * **Examples:**
     * Retrieve single parameter as UINT using: `_uiOemId := _PLC.uiOemId;`
@@ -235,7 +235,7 @@ Currently under development and will be released in the next revision.
 * `bSlot` (BYTE) specifies the module slot.
     * Default: `0`
 * `sDeviceIp` (STRING) allows you to change device IP from the one specified initially.
-    * Default: `11.200.0.10`
+    * Default: `'11.200.0.10'`
     * Toggle bEnable to update settings
 * `uiDevicePort` (UINT) allows you to change device port from the one specified initially.
     * Default: `102`
