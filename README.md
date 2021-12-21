@@ -191,7 +191,9 @@ Testing was done using a Raspberry Pi 3, with CoDeSys 3.5.16.0 runtime installed
 
 ### **Current features**
 #### Get CPU Info
-`bGetCpuInfo()` (BOOL) is automatically called after TCP connection is established to return device info. You could scan your network for other Siemens PLCs.  
+`bGetCpuInfo()` (BOOL) is automatically called after TCP connection is established to return device info. You could scan your network for other Siemens PLCs.
+#### Get CPU State
+`bGetCpuState()` (BOOL) is automatically called after TCP connection is established to return device operating state.  Call this function to get Requested/Previous Mode.
 * **Examples:**
     * Retrieve single parameter as UINT using: `_uiOemId := _PLC.uiOemId;`
         * **Output:** `0`
@@ -220,6 +222,10 @@ Testing was done using a Raspberry Pi 3, with CoDeSys 3.5.16.0 runtime installed
             * udiOemAddId: `16#00000000`
             * sOemAddId: `'0x00000000'`
             * sLocationId: `'Test Lab'`
+            * bRequestedMode: `16#08`
+            * sRequestedMode: `'Run'`
+            * bPreviousMode: `16#00`
+            * sPreviousMode: `'Unknown'`
 
 #### Get/Set PLC time
 Currently under development and will be released in the next revision.

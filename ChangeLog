@@ -1,2 +1,8 @@
+v1.0.0.1:
+* add CPU state info
+* minor clean up and optimization
+* updated readme
+* update example project
+
 v1.0.0.0:
 * first release has capabilities to connect/disconnect, read cpu module, read/write to data blocks.  Will work on other features in the near future
