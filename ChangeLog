@@ -1,3 +1,11 @@
+v1.0.1.0:
+* add bGetPlcTime and bSetPlcTime
+* minor cleanup
+* update Timestamp FB
+* add new util functions
+* add picture of example DB
+* update readme
+
 v1.0.0.1:
 * add CPU state info
 * minor clean up and optimization

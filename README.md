@@ -227,22 +227,39 @@ Testing was done using a Raspberry Pi 3, with CoDeSys 3.5.16.0 runtime installed
             * bPreviousMode: `16#00`
             * sPreviousMode: `'Unknown'`
 
-#### Get/Set PLC time
-Currently under development and will be released in the next revision.
-<!--
-`bGetPlcTime()` (BOOL) requests the current PLC time.  The function can handle 64b time up to nanoseconds resolution, but the PLC's accuracy is only available at the microseconds.
+#### Get/Set PLC time (Not working for S7-1200 / S7-1500)
+`bGetPlcTime()` (BOOL) requests the current PLC time.  The function can handle 64b time up to nanoseconds resolution, but the PLC's accuracy is only available at the milliseconds.
 * **Example:**
     * Retrieve time as STRING: `_sPlcTime := _PLC.sPlcTime;`
-        * **Output:** `'LDT#2020-07-10-01:05:59.409036000'`
-    * Retrieve time in microseconds as ULINT: `_uliPlcTime := _PLC.uliPlcTime;`
-        * **Output:** `1593815478238754`
+        * **Output:** `'LDT#2021-12-22-07:58:21.754000000'`
+    * Retrieve time in nanoseconds as ULINT: `_uliPlcTime := _PLC.uliPlcTime;`
+        * **Output:** `1640159905367754000000`
+    * Retrieve year: `_uiYear := _PLC.uiYear;`
+        * **Output:** `2021`
+    * Retrieve year in short format: `_bYear := _PLC.bYear;`
+        * **Output:** `21`
+    * Retrieve month: `_bMon := _PLC.bMon;`
+        * **Output:** `12`
+    * Retrieve day: `_bDay := _PLC.bDay;`
+        * **Output:** `22`
+    * Retrieve hour: `_bHour := _PLC.bHour;`
+        * **Output:** `7`
+    * Retrieve minute: `_bMinute := _PLC.bMinute;`
+        * **Output:** `58`
+    * Retrieve second: `_bSecond := _PLC.bSecond;`
+        * **Output:** `21`
+    * Retrieve millisecond: `_uiMilli := _PLC.uiMillisecond;`
+        * **Output:** `754`
+    * Retrieve day of the week: `_bDOW := _PLC.bDayOfWeek;`
+        * **Output:** `4`
+    * Retrieve day of the week: `_sDOW := _PLC.sDayOfWeek;`
+        * **Output:** `'Wednesday'`
 
 `bSetPlcTime(ULINT)` (BOOL) sets the PLC time.
 * **Examples:**
     * Synchronize PLC's time to IPC's time: `bSetPlcTime()`
     * Set a PLC time to `Friday, July 3, 2020 10:31:18 PM GMT` with seconds level accuracy in microseconds: `bSetPlcTime(1593815478000000)`
     * **NOTE:** Look at built-in `Timestamp` function block
--->
 
 ### **Useful parameters (SET/GET)**
 **NOTE:** There are a lot more, so dive into library to see what works best for you
