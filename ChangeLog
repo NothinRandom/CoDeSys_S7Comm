@@ -1,3 +1,6 @@
+v1.0.1.1:
+* bypass bGetCpuState hangup on S7-300 since data is fragmented (TODO: handle data fragmentation)
+
 v1.0.1.0:
 * add bGetPlcTime and bSetPlcTime
 * minor cleanup
